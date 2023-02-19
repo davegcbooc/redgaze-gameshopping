@@ -1,0 +1,261 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using System.Data;
+@using System.Data.SqlClient;
+@using System.Configuration;
+@using System.Web.Configuration;
+@using System.IO;
+@using System.Drawing;
+@using System.Drawing.Imaging;
+
+@{
+    ViewBag.Title = "Cart";
+}
+
+<header class="nk-header nk-header-opaque">
+    <nav class="nk-navbar nk-navbar-top nk-navbar-sticky nk-navbar-autohide">
+        <div class="container">
+            <div class="nk-nav-table">
+
+                <a href="~/Home/Index" class="nk-nav-logo">
+                    <img src="~/Content//images/logo.png" width="210" />
+                </a>
+
+                <ul class="nk-nav nk-nav-right d-none d-lg-table-cell" data-nav-mobile="#nk-nav-mobile">
+                    <li class=" nk-drop-item">
+                        <a href="~/Home/Index">
+                            Home
+
+                        </a><ul class="dropdown">
+
+                            <li>
+                                @Html.ActionLink("Product Entry", "ProductEntry", "Home")
+                            </li>
+                            <li>
+                                @Html.ActionLink("Update Product", "UpdateProduct", "Home")
+                            </li>
+                            <li>
+                                @Html.ActionLink("User Entry", "UserEntry", "Home")
+                            </li>
+
+
+
+                        </ul>
+                    </li>
+                    <li>
+                        @Html.ActionLink("Orders", "Orders", "Home")
+                    </li>
+                    <li>
+                        @Html.ActionLink("Log out", "Login", "Home")
+                    </li>
+
+                </ul>
+                <ul class="nk-nav nk-nav-right nk-nav-icons">
+
+                    <li class="single-icon d-lg-none">
+                        <a href="#" class="no-link-effect" data-nav-toggle="#nk-nav-mobile">
+                            <span class="nk-icon-burger">
+                                <span class="nk-t-1"></span>
+                                <span class="nk-t-2"></span>
+                                <span class="nk-t-3"></span>
+                            </span>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END: Navbar -->
+
+</header>
+<div class="nk-gap-2"></div>
+<div class="container">
+    <h3 class="nk-decorated-h-3"><span>Shopping Cart</span></h3>
+    <div class="nk-gap-2"></div>
+    <div class="nk-gap-2"></div>
+
+
+    @{
+        string connDB = WebConfigurationManager.ConnectionStrings["connDB"].ConnectionString;
+        using (var db = new SqlConnection(connDB))
+        {
+            db.Open();
+            using (var cmd = db.CreateCommand())
+            {
+                cmd.CommandType = CommandType.Text;
+                cmd.CommandText = "SELECT * FROM SCART";
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.HasRows)
+                    {
+                        <table class="nk-table">
+                            <thead>
+                                <tr>
+                                    <th width="15%">
+                                        <center>ITEM NO</center>
+                                    </th>
+                                    <th width="15%">
+                                        <center>ITEM NAME</center>
+                                    </th>
+                                    <th width="10%">
+                                        <center>QTY</center>
+                                    </th>
+                                    <th width="10%">
+                                        <center>PRICE</center>
+                                    </th>
+                                    <th width="10%">
+                                        <center>TOTAL</center>
+                                    </th>
+                                    <th colspan="2">
+                                        <center>ACTION</center>
+                                    </th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+                                @while (reader.Read())
+                                {
+                                    <tr class="items">
+                                        <td class="itmnum">
+                                            @reader["ITMNUM"]
+                                        </td>
+                                        <td class="itmname">
+                                            @reader["ITMNAME"]
+                                        </td>
+                                        <td class="quantity">
+                                            @reader["QTY"]
+                                        </td>
+                                        <td class="price">
+                                            @reader["ITMPRCE"]
+                                        </td>
+                                        <td class="total">
+                                            @reader["TOTAL"]
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <input type="button" class="btnRemove" name="removeitm" value="Remove" />
+                                            </center><br /><br />
+                                        </td>
+                                        <td>
+                                            <center>
+                                                <input type="button" class="btncheckout" name="btncheckout" value="Checkout" />
+                                            </center><br /><br />
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <br />
+                        <br />
+                        <h4><strong>TOTAL PRICE:</strong></h4><h4 id="grandTotal"></h4>
+
+                        <br />
+                        <br />
+                        <input type="button" class="btnBackToShop" name="backshop" value="Continue Shopping" />
+                    }
+                    else
+                    {
+                        <h3 class="nk-decorated-h-3"><span>Shopping Cart Is Empty</span></h3>
+                        <br />
+                        <br />
+                        <input type="button" class="btnBackToShop" name="backshop" value="Continue Shopping" />
+                    }
+                }
+            }
+        }
+    }
+</div>
+    <img class="nk-page-background-top" src="~/Content//images/bg-top-4.png" alt="">
+    <img class="nk-page-background-bottom" src="~/Content//images/bg-bottom.png" alt="">
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        var grandtotal = 0;
+        /* get the sum in Total column and placed it to grandtotal variable */
+        $('.total').each(function () {
+            grandtotal += parseFloat($(this).text());        
+        });
+        $('#grandTotal').html(grandtotal);
+
+        $('.btnBackToShop').click(function () {
+            window.location.href = "../Home/ListAllProducts";
+        });
+        /* remove items from cart by itmnum */
+        $(".btnRemove").each(function () {
+            $(this).click(function () {
+                var itmnum = $(this).closest('.items').find('.itmnum').html();
+                $.post("../Home/RemoveItemCart", {
+                    itemNo: itmnum
+                }, function (res) {
+                    if (res[0].mess == 0) {
+                        alert("Item is successfully remove to the Cart");
+                        window.location.href = "../Home/Cart";
+                    }
+                    else {
+                        alert("Something went wrong, Try again");
+                    }
+                });
+            });
+        });
+
+
+
+        $(".btncheckout").each(function () {
+            $(this).click(function () {
+                var itmnum = $(this).closest('.items').find('.itmnum').html();
+                var itmname = $(this).closest('.items').find('.itmname').html();
+                var price = $(this).closest('.items').find('.price').html();
+                var total = $(this).closest('.items').find('.total').html();
+                var qty = $(this).closest('.items').find('.quantity').html();
+             
+                $.post("../Home/CheckOutOrder", {
+                    itemNo: itmnum,
+                    itmName: itmname,
+                    itmprice: price,
+                    total: total,
+                    qty: qty
+                }, function (res) {
+                    if (res[0].mess == 0) {
+                        alert("Item is Successfully Checkout");
+                        
+                    }
+                    else {
+                        alert("Something went wrong, Try again");
+                    }
+                });
+
+                $.post("../Home/RemoveItemCart", {
+                    itemNo: itmnum
+                }, function (res) {
+                    if (res[0].mess == 0) {
+                        
+                    }
+                    else {
+                        alert("Something went wrong, Try again");
+                    }
+                });
+
+                $.post("../Home/UpdateQtyhand", {
+                    itemNo: itmnum,
+                    qty: qty
+                }, function (res) {
+                    if (res[0].mess == 0) {
+                        window.location.href = "../Home/Orders";
+                    }
+                    else {
+                        alert("Something went wrong, Try again");
+                    }
+                });
+
+
+
+            });
+        });
+
+    </script>
+
+

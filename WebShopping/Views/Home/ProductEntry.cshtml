@@ -1,0 +1,127 @@
+﻿
+@{
+    ViewBag.Title = "ProductEntry";
+}
+
+<html>
+<body>
+
+    <header class="nk-header nk-header-opaque">
+        <nav class="nk-navbar nk-navbar-top nk-navbar-sticky nk-navbar-autohide">
+            <div class="container">
+                <div class="nk-nav-table">
+
+                    <a href="~/Home/Index" class="nk-nav-logo">
+                        <img src="~/Content//images/logo.png" width="210" />
+                    </a>
+
+                    <ul class="nk-nav nk-nav-right d-none d-lg-table-cell" data-nav-mobile="#nk-nav-mobile">
+
+                        <li class=" nk-drop-item">
+                            <a href="~/Home/Index">
+                                Home
+
+                            </a><ul class="dropdown">
+
+                                
+                                <li>
+                                    @Html.ActionLink("Update Product", "UpdateProduct", "Home")
+                                </li>
+                                <li>
+                                    @Html.ActionLink("User Entry", "UserEntry", "Home")
+                                </li>
+
+
+
+                            </ul>
+                        </li>
+                        <li>
+                            @Html.ActionLink("Shopping Cart", "Cart", "Home")
+                        </li>
+                        <li>
+                            @Html.ActionLink("Log out", "Login", "Home")
+                        </li>
+                    </ul>
+                    <ul class="nk-nav nk-nav-right nk-nav-icons">
+
+                        <li class="single-icon d-lg-none">
+                            <a href="#" class="no-link-effect" data-nav-toggle="#nk-nav-mobile">
+                                <span class="nk-icon-burger">
+                                    <span class="nk-t-1"></span>
+                                    <span class="nk-t-2"></span>
+                                    <span class="nk-t-3"></span>
+                                </span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- END: Navbar -->
+    </header>
+    <div class="nk-gap"></div>
+    <div class="container">
+        <form id="productRecord" action="../Home/ProductEntry" method="post" enctype="multipart/form-data">
+            <h3 class="nk-decorated-h"><span><span class="text-main-1">Product</span> Entry</span></h3>
+
+            <div class="nk-gap"></div>
+
+            <div class="col-md-6">
+                <div class="nk-gap"></div>
+                <label>Product ID</label>
+                <input type="text" class="form-control" id="txtCode" name="txtCode">
+
+                <div class="nk-gap"></div>
+                <input type="text" class="form-control required" id="txtName" name="txtName" placeholder="Product Name *">
+
+                <div class="nk-gap"></div>
+                <div class="nk-gap"></div>
+                <div class="nk-gap"></div>
+                <input type="number" class="form-control required" id="txtprice" min="0" max="10000.00" step=".01" name="txtprice" placeholder="Price *">
+                <div class="nk-gap"></div>
+
+                <label>Quantity on Hand </label>
+                <div class="nk-gap"></div>
+                <input type="number" class="form-control" value="1" min="1" max="1000" id="txtonhand" name="txtonhand">
+                <div class="nk-gap"></div>
+
+                <label>Date</label>
+                <div class="nk-gap"></div>
+                <input type="text" class="form-control required" id="datepicker" name="datepicker" value="@DateTime.Now.ToShortDateString()" />
+                <div class="nk-gap"></div>
+
+                <textarea class="form-control required" id="txtDesc" name="txtDesc" rows="5" placeholder="Product Description *"></textarea>
+                <div class="nk-gap-1"></div>
+                <div class="nk-gap"></div>
+
+                <label>Upload Image*</label>
+                <div class="nk-gap"></div>
+                <input type="file" id="uploadImg" required name="uploadImg"
+                       accept="image/png, image/jpeg, image/jpg, image/bmp"
+                       onchange="getImagePreview()" />
+                <div class="nk-gap"></div>
+                <div id="preview">
+
+                </div>
+                <br />
+
+                <input class="nk-btn nk-btn-rounded nk-btn-color-main-1" id="btnSaveProd" type="submit" />
+                &nbsp;&nbsp;
+
+                <button onclick="resetForm();" class="nk-btn nk-btn-rounded nk-btn-color-dark-3 nk-btn-hover-color-info">Clear All </button>
+
+
+            </div>
+            <div class="nk-gap"></div>
+            <div class="nk-gap"></div>
+
+        </form>
+    </div>
+    <img class="nk-page-background-top" src="~/Content//images/bg-top.png" alt="">
+    <img class="nk-page-background-bottom" src="~/Content//images/bg-bottom.png" alt="">
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-3.6.0.min.js"></script>
+    <script src="~/Content//vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery/myscript.js"></script>
+</body>
+</html>
+

@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewBag.Title = "UserEntry";
+}
+
+
+<html>
+<body>
+    <header class="nk-header nk-header-opaque">
+        <nav class="nk-navbar nk-navbar-top nk-navbar-sticky nk-navbar-autohide">
+            <div class="container">
+                <div class="nk-nav-table">
+
+                    <a href="~/Home/Index" class="nk-nav-logo">
+                        <img src="~/Content//images/logo.png" width="210" />
+                    </a>
+
+                    <ul class="nk-nav nk-nav-right d-none d-lg-table-cell" data-nav-mobile="#nk-nav-mobile">
+                        <li class=" nk-drop-item">
+                            <a href="~/Home/Index">
+                                Home
+
+                            </a><ul class="dropdown">
+
+                                <li>
+                                    @Html.ActionLink("Product Entry", "ProductEntry", "Home")
+                                </li>
+                                <li>
+                                    @Html.ActionLink("Update Product", "UpdateProduct", "Home")
+                                </li>
+                                <li>
+                                    @Html.ActionLink("User Entry", "UserEntry", "Home")
+                                </li>
+
+
+
+                            </ul>
+                        </li>
+                        <li>
+                            @Html.ActionLink("Shopping Cart", "Cart", "Home")
+                        </li>
+                        <li>
+                            @Html.ActionLink("Log out", "Login", "Home")
+                        </li>
+
+                    </ul>
+                    <ul class="nk-nav nk-nav-right nk-nav-icons">
+
+                        <li class="single-icon d-lg-none">
+                            <a href="#" class="no-link-effect" data-nav-toggle="#nk-nav-mobile">
+                                <span class="nk-icon-burger">
+                                    <span class="nk-t-1"></span>
+                                    <span class="nk-t-2"></span>
+                                    <span class="nk-t-3"></span>
+                                </span>
+                            </a>
+                        </li>
+
+
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- END: Navbar -->
+    </header>
+    <div class="nk-gap"></div>
+    <div class="container">
+        <form id="userRecord" action="../Home/UserEntry" method="post" enctype="multipart/form-data">
+            <h3 class="nk-decorated-h"><span><span class="text-main-1">User</span> Entry</span></h3>
+            <div class="nk-gap"></div>
+            <div class="col-md-6">
+
+                <label>User ID</label>
+                <div class="nk-gap"></div>
+                <input type="text" id="txtusrid" name="txtusrid" class="form-control required" /> <br />
+
+                <label>Last Name</label>
+                <div class="nk-gap"></div>
+                <input type="text" id="txtlname" name="txtlname"  class="form-control required" /> <br />
+
+                <label>First Name</label>
+                <div class="nk-gap"></div>
+                <input type="text" id="txtfname" name="txtfname"  class="form-control required" /> <br />
+
+                <label>Address</label>
+                <div class="nk-gap"></div>
+                <input type="text" id="txtaddress" name="txtaddress"  class="form-control required"/> <br />
+
+                <label>Contact No:</label>
+                <div class="nk-gap"></div>
+                <input type="text" id="txtcontact" name="txtcontact"  class="form-control required"/> <br />
+
+                <label>Email</label>
+                <div class="nk-gap"></div>
+                <input type="email" id="txtemail" name="txtemail"  class="form-control required"/><br />
+
+                <label>Password</label>
+                <div class="nk-gap"></div>
+                <input type="password" id="txtpswrd" name="txtpswrd"  class="form-control required"/> <br />
+
+                <label>Username</label>
+                <div class="nk-gap"></div>
+                <input type="text" id="txtusername" name="txtusername"  class="form-control required"/><br />
+
+                <label>Role</label>
+                <div class="nk-gap"></div>
+                <input type="text" id="txtrole" name="txtrole" class="form-control required"/><br /><br />
+
+                <input class="nk-btn nk-btn-rounded nk-btn-color-main-1" id="btnSaveProd" type="submit" value="Save" /><br />
+            </div>
+            <div class="nk-gap"></div>
+        </form>
+    </div>
+    <img class="nk-page-background-top" src="~/Content//images/bg-top.png" alt="">
+    <img class="nk-page-background-bottom" src="~/Content//images/bg-bottom.png" alt="">
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="~/Scripts/jquery/userEntry.js"></script>
+
+</body>
+
+</html>

@@ -1,0 +1,194 @@
+﻿@using System;
+@using System.Collections.Generic;
+@using System.Linq;
+@using System.Web;
+@using System.Web.Mvc;
+@using System.Data;
+@using System.Data.SqlClient;
+@using System.Configuration;
+@using System.Web.Configuration;
+@using System.IO;
+@using System.Drawing;
+@using System.Drawing.Imaging;
+
+@{
+    ViewBag.Title = "ListAllProducts";
+}
+
+<header class="nk-header nk-header-opaque">
+
+    <nav class="nk-navbar nk-navbar-top nk-navbar-sticky nk-navbar-autohide">
+        <div class="container">
+            <div class="nk-nav-table">
+
+                <a href="~/Home/Index" class="nk-nav-logo">
+                    <img src="~/Content//images/logo.png" width="210" />
+                </a>
+
+                <ul class="nk-nav nk-nav-right d-none d-lg-table-cell" data-nav-mobile="#nk-nav-mobile">
+
+                    <li class=" nk-drop-item">
+                        <a href="~/Home/Index">
+                            Home
+
+                        </a><ul class="dropdown">
+
+                            <li>
+                                @Html.ActionLink("Product Entry", "ProductEntry", "Home")
+                            </li>
+                            <li>
+                                @Html.ActionLink("User Entry", "UserEntry", "Home")
+                            </li>
+                            <li>
+                                @Html.ActionLink("Update Product", "UpdateProduct", "Home")
+                            </li>
+
+
+
+                        </ul>
+                    </li>
+                    <li>
+                        @Html.ActionLink("Shopping Cart", "Cart", "Home")
+                    </li>
+                    <li>
+                        @Html.ActionLink("Log out", "Login", "Home")
+                    </li>
+                    <li>
+                        @Html.ActionLink("Orders", "Orders", "Home")
+                    </li>
+
+                </ul>
+                <ul class="nk-nav nk-nav-right nk-nav-icons">
+
+                    <li class="single-icon d-lg-none">
+                        <a href="#" class="no-link-effect" data-nav-toggle="#nk-nav-mobile">
+                            <span class="nk-icon-burger">
+                                <span class="nk-t-1"></span>
+                                <span class="nk-t-2"></span>
+                                <span class="nk-t-3"></span>
+                            </span>
+                        </a>
+                    </li>
+
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- END: Navbar -->
+
+</header>
+<div class="nk-gap-2"></div>
+<div class="container">
+    <h3 class="nk-decorated-h-3"><span>List of Products</span></h3>
+    <div class="nk-gap-2"></div>
+    <div class="nk-gap-2"></div>
+
+        @{
+            string connDB = WebConfigurationManager.ConnectionStrings["connDB"].ConnectionString;
+            using (var db = new SqlConnection(connDB))
+            {
+                db.Open();
+                using (var cmd = db.CreateCommand())
+                {
+                    cmd.CommandType = CommandType.Text;
+                    cmd.CommandText = "SELECT * FROM ITMTBL";
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.HasRows)
+                        {
+                            <table class="nk-table">
+                                <thead>
+                                    <tr>
+                                        <th width="15%">
+                                            <center>ITEM NO:</center>
+                                        </th>
+                                        <th width="15%">
+                                            <center>ITEM NAME</center>
+                                        </th>
+                                        <th width="10%">
+                                            <center>STOCKS AVAILABLE</center>
+                                        </th>
+                                        <th width="15%">
+                                            <center>ITEM PRICE</center>
+                                        </th>
+                                        <th>
+                                            <center>ITEM IMAGE</center>
+                                        </th>
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @while (reader.Read())
+                                    {
+                                        <tr class="items">
+                                            <td class="itmnum">
+                                                @reader["ITMNUM"]
+                                            </td>
+                                            <td class="itmname">
+                                                @reader["ITMNAME"]
+                                            </td>
+                                            <td class="onhand">
+                                                @reader["QTYHAND"]
+                                            </td>
+                                            <td class="price">
+                                                @reader["ITMPRCE"]
+                                            </td>
+                                            <td>
+                                                <center>
+                                                    <img src="../Home/Image?filename=@HttpUtility.UrlEncode(reader["ITMIMG"]+"")" width="20%" /> <br />
+                                                    <br />
+                                                    <input type="number" class="txtqty" name="txtqty" step="1" min="1" max="1000" oninput="validity.valid||(value='')"/> <br />
+                                                    <input type="button" class="btnCart" name="btnsbmt" value="Add to Cart" />
+                                                </center><br /><br />
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        }
+                        else
+                        {
+                            <p>No Records Found!!!</p>
+                        }
+                    }
+                }
+            }
+        }
+    </div>
+    <img class="nk-page-background-top" src="~/Content//images/bg-top-3.png" alt="">
+    <img class="nk-page-background-bottom" src="~/Content//images/bg-bottom.png" alt="">
+    <script type="text/javascript" src="~/Scripts/jquery/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript">
+        $(".btnCart").each(function () {
+            $(this).click(function () {
+                var itmnum = $(this).closest('.items').find('.itmnum').html();
+                var itmname = $(this).closest('.items').find('.itmname').html();
+                var price = $(this).closest('.items').find('.price').html();
+                var onhand = $(this).closest('.items').find('.onhand').html();
+                var qty = $(this).closest('.items').find('.txtqty').val();
+
+                if (parseInt(qty) <= parseInt(onhand)) {
+                    var total = 0;
+                    total = parseFloat(price) * parseFloat(qty);
+                    $.post("../Home/ShoppingCart", {
+                        itemNo: itmnum,
+                        itmName: itmname,
+                        itmprice: price,
+                        total: total,
+                        qty: qty
+                    }, function (res) {
+                        if (res[0].mess == 0) {
+                            alert("Item is successfully added to the Cart");
+                            window.location.href = "../Home/Cart";
+                        }
+                        else {
+                            alert("Something went wrong, Try again");
+                        }
+                    });
+                } else {
+                    alert('insufficient stocks');
+                }
+            });
+        });
+    </script>
